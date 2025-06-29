@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dynamic Quote Generator</title>
     <style>
+        /* General Body Styling */
         body {
             font-family: 'Inter', sans-serif;
             display: flex;
@@ -36,6 +37,7 @@
             text-align: center;
         }
 
+        /* Quote Display Area */
         #quoteDisplay {
             min-height: 100px; /* Ensure space for quote */
             display: flex;
@@ -64,6 +66,7 @@
             color: #777;
         }
 
+        /* General Button Styles */
         button {
             background-color: #3498db;
             color: white;
@@ -82,6 +85,7 @@
             transform: translateY(-2px);
         }
 
+        /* Add Quote Form Section */
         #addQuoteForm {
             margin-top: 40px;
             border-top: 1px solid #eee;
@@ -110,7 +114,7 @@
         }
 
         #addQuoteForm button {
-            background-color: #28a745;
+            background-color: #28a745; /* Specific color for Add Quote button */
             margin-top: 10px;
         }
 
@@ -118,6 +122,7 @@
             background-color: #218838;
         }
 
+        /* Category Filter Section */
         .filter-section {
             margin-top: 20px;
             margin-bottom: 20px;
@@ -129,6 +134,92 @@
             margin-right: 10px;
             color: #555;
         }
+
+        /* Storage Buttons Container (Import/Export) */
+        .storage-buttons-container {
+            margin-top: 20px;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .storage-buttons-container button,
+        .storage-buttons-container input[type="file"] {
+            flex-grow: 1; /* Allow buttons to expand */
+            max-width: 200px; /* Max width for buttons */
+        }
+        
+        /* Styling for the import file input to look like a button */
+        .storage-buttons-container label.button {
+            background-color: #6c757d; /* Grey background for import button */
+            color: white;
+            padding: 12px 25px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1em;
+            margin: 5px;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            display: inline-block; /* Essential for padding/margin */
+            text-align: center;
+            line-height: 1; /* Adjust text vertical alignment */
+        }
+
+        .storage-buttons-container label.button:hover {
+            background-color: #5a6268;
+            transform: translateY(-2px);
+        }
+
+        /* Display for last viewed quote from Session Storage */
+        #lastViewedQuoteDisplay {
+            margin-top: 20px;
+            font-size: 0.9em;
+            color: #666;
+            font-style: italic;
+            padding: 10px;
+            background-color: #eaf3f8;
+            border-radius: 8px;
+            border: 1px solid #d0e0ea;
+            text-align: center;
+        }
+
+        /* Styles for Notification Display (from later tasks, kept for completeness) */
+        #notificationDisplay {
+            padding: 10px;
+            margin-top: 15px;
+            border-radius: 5px;
+            font-weight: bold;
+            text-align: center;
+            display: none; /* Hidden by default, shown by JS */
+            width: calc(100% - 40px);
+            max-width: 700px;
+            box-sizing: border-box;
+            word-wrap: break-word; /* Ensure long messages break */
+            z-index: 100; /* Ensure it's on top */
+            position: fixed; /* Fixed position */
+            top: 20px; /* From the top */
+            left: 50%; /* Center horizontally */
+            transform: translateX(-50%); /* Adjust for true centering */
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+        #notificationDisplay.info {
+            background-color: #e7f3fe;
+            color: #0056b3;
+            border: 1px solid #cce5ff;
+        }
+        #notificationDisplay.success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        #notificationDisplay.error {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
 
         /* Responsive adjustments */
         @media (max-width: 480px) {
@@ -148,12 +239,26 @@
                 padding: 10px 20px;
                 font-size: 0.9em;
             }
+            .storage-buttons-container {
+                flex-direction: column;
+                align-items: center;
+            }
+            .storage-buttons-container button,
+            .storage-buttons-container label.button { /* Apply to the label now */
+                width: 100%; /* Full width on small screens */
+                max-width: none;
+            }
+            #notificationDisplay {
+                width: calc(100% - 20px); /* Adjust width for padding on small screens */
+                top: 10px;
+            }
         }
     </style>
 </head>
 <body>
     <h1>Dynamic Quote Generator</h1>
 
+    <!-- Main Quote Display Section -->
     <div class="container">
         <div id="quoteDisplay" class="no-quote">
             Click "Show New Quote" to see a quote.
@@ -161,14 +266,20 @@
         <div id="quoteAuthor"></div>
         <button id="newQuoteBtn">Show New Quote</button>
 
+        <!-- Category Filter Dropdown (from a later task, but included for completeness) -->
         <div class="filter-section">
             <label for="categoryFilter">Filter by Category:</label>
             <select id="categoryFilter">
                 <option value="all">All Categories</option>
+                <!-- Categories will be dynamically populated by JavaScript -->
             </select>
         </div>
+
+        <!-- CHECKPOINT: Step 1 - Using Session Storage (Optional) -->
+        <div id="lastViewedQuoteDisplay"></div>
     </div>
 
+    <!-- Dynamic Quote Addition Form -->
     <div class="container" id="addQuoteForm">
         <h2>Add Your Own Quote</h2>
         <input id="newQuoteText" type="text" placeholder="Enter a new quote" />
@@ -176,7 +287,24 @@
         <button id="addQuoteBtn">Add Quote</button>
     </div>
 
-    <!-- Link your JavaScript file -->
+    <!-- CHECKPOINT: Step 2 - JSON Data Import and Export -->
+    <div class="container storage-buttons-container">
+        <h2>Manage Quotes Data</h2>
+        <!-- CHECKPOINT: Implement JSON Export - Provide a button that allows users to export -->
+        <button id="exportQuotesBtn">Export Quotes (JSON)</button>
+        
+        <!-- CHECKPOINT: Implement JSON Import - Provide a file input to allow users to upload -->
+        <!-- The file input is hidden and triggered by a styled label to look like a button -->
+        <label for="importFile" class="button">
+            <input type="file" id="importFile" accept=".json" onchange="importFromJsonFile(event)" style="display: none;" />
+            Import Quotes (JSON)
+        </label>
+    </div>
+
+    <!-- Notification Display Element (from a later task, kept for completeness) -->
+    <div id="notificationDisplay" class="notification" style="display: none;"></div>
+
+    <!-- Link your JavaScript file (script.js) -->
     <script src="script.js"></script>
 </body>
 </html>
