@@ -185,7 +185,7 @@
             text-align: center;
         }
 
-        /* Styles for Notification Display (from later tasks, kept for completeness) */
+        /* Styles for Notification Display */
         #notificationDisplay {
             padding: 10px;
             margin-top: 15px;
@@ -266,16 +266,16 @@
         <div id="quoteAuthor"></div>
         <button id="newQuoteBtn">Show New Quote</button>
 
-        <!-- Category Filter Dropdown (from a later task, but included for completeness) -->
+        <!-- CHECKPOINT: Step 1 - Add Category Filter: Introduce a dropdown menu -->
         <div class="filter-section">
             <label for="categoryFilter">Filter by Category:</label>
-            <select id="categoryFilter">
+            <select id="categoryFilter" onchange="filterQuotes()">
                 <option value="all">All Categories</option>
-                <!-- Categories will be dynamically populated by JavaScript -->
+                <!-- Dynamically populated categories -->
             </select>
         </div>
 
-        <!-- CHECKPOINT: Step 1 - Using Session Storage (Optional) -->
+        <!-- Session Storage Display for Last Viewed Quote -->
         <div id="lastViewedQuoteDisplay"></div>
     </div>
 
@@ -287,21 +287,18 @@
         <button id="addQuoteBtn">Add Quote</button>
     </div>
 
-    <!-- CHECKPOINT: Step 2 - JSON Data Import and Export -->
+    <!-- JSON Import/Export Controls -->
     <div class="container storage-buttons-container">
         <h2>Manage Quotes Data</h2>
-        <!-- CHECKPOINT: Implement JSON Export - Provide a button that allows users to export -->
         <button id="exportQuotesBtn">Export Quotes (JSON)</button>
-        
-        <!-- CHECKPOINT: Implement JSON Import - Provide a file input to allow users to upload -->
-        <!-- The file input is hidden and triggered by a styled label to look like a button -->
+        <!-- The file input is hidden and triggered by a styled label (button look-alike) -->
         <label for="importFile" class="button">
             <input type="file" id="importFile" accept=".json" onchange="importFromJsonFile(event)" style="display: none;" />
             Import Quotes (JSON)
         </label>
     </div>
 
-    <!-- Notification Display Element (from a later task, kept for completeness) -->
+    <!-- Notification Display Element -->
     <div id="notificationDisplay" class="notification" style="display: none;"></div>
 
     <!-- Link your JavaScript file (script.js) -->
