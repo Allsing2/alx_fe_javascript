@@ -308,7 +308,7 @@ exportQuotesButton.addEventListener('click', exportQuotes);
 // categoryFilterSelect has an inline onchange="filterQuotes()" as per prompt.
 // importFileInput has an inline onchange="importFromJsonFile(event)" as per prompt.
 
-// --- Initial Setup on Page Load ---   
+// --- Initial Setup on Page Load ---
 window.onload = function() {
   loadQuotes(); // Load quotes from local storage
   populateCategories(); // Populate filter dropdown based on loaded quotes
