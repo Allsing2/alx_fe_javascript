@@ -18,41 +18,22 @@ document.addEventListener('DOMContentLoaded', function() {
     quotes = quotes.map(quote => ({ ...quote, id: quote.id || generateUniqueId() }));
 
 
-    // --- Simulate Server Interaction (Step 1) ---
-    // CHECKPOINT: Setup Server Simulation: Use JSONPlaceholder or a similar mock API to simulate fetching and posting data.
-    // Initialize mock server with a deep copy of the current local data for consistency.
+    // --- Simulate Server Interaction (from later tasks, kept for completeness) ---
+    // Initialize mock server with a deep copy of the initial local data for consistency.
     let mockServerQuotes = JSON.parse(JSON.stringify(quotes));
 
-    // CHECKPOINT: Implement periodic data fetching to simulate receiving updates from a server.
-    // Function to simulate fetching data from the server
-    // CHECKPOINT: Fetching data from the server using a mock API.
     async function fetchQuotesFromServer() {
-        // Simulate network delay
-        return new Promise(resolve => {
-            setTimeout(() => {
-                // Return a deep copy to ensure modifications to 'quotes' don't directly alter 'mockServerQuotes'
-                resolve(JSON.parse(JSON.stringify(mockServerQuotes)));
-            }, 500); // 0.5 second delay
-        });
+        return new Promise(resolve => { setTimeout(() => resolve(JSON.parse(JSON.stringify(mockServerQuotes))), 500); });
     }
 
-    // Function to simulate posting/updating data on the server
-    // CHECKPOINT: Posting data to the server using a mock API.
     async function postQuoteToServer(quote) {
         return new Promise(resolve => {
             setTimeout(() => {
                 const index = mockServerQuotes.findIndex(q => q.id === quote.id);
-                if (index > -1) {
-                    // Update existing quote by ID
-                    mockServerQuotes[index] = { ...quote }; // Use spread to ensure deep copy
-                    console.log("Mock server updated existing quote:", quote);
-                } else {
-                    // Add new quote
-                    mockServerQuotes.push({ ...quote }); // Use spread to ensure deep copy
-                    console.log("Mock server added new quote:", quote);
-                }
+                if (index > -1) { mockServerQuotes[index] = { ...quote }; }
+                else { mockServerQuotes.push({ ...quote }); }
                 resolve({ success: true, updatedQuote: { ...quote } });
-            }, 300); // 0.3 second delay
+            }, 300);
         });
     }
 
@@ -67,7 +48,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const exportQuotesBtn = document.getElementById('exportQuotesBtn');
     const importFile = document.getElementById('importFile');
     const lastViewedQuoteDisplay = document.getElementById('lastViewedQuoteDisplay');
-    const notificationDisplay = document.getElementById('notificationDisplay'); // Notification UI element
+    const notificationDisplay = document.getElementById('notificationDisplay');
 
 
     // Set to keep track of unique categories for the filter dropdown.
@@ -130,7 +111,8 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // Function: populateCategories
-    // CHECKPOINT: Populate Categories Dynamically: Use the existing quotes array to extract unique categories and populate the dropdown menu.
+    // CHECKPOINT: Step 2: Implement Filtering Logic - Populate Categories Dynamically.
+    // CHECKPOINT: Use the existing quotes array to extract unique categories and populate the dropdown menu.
     // CHECKPOINT: Name the function behind this implementation populateCategories.
     window.populateCategories = function() {
         // Clear all existing options first, but keep "All Categories".
@@ -164,7 +146,8 @@ document.addEventListener('DOMContentLoaded', function() {
     };
 
     // Function: filterQuotes
-    // CHECKPOINT: Filter Quotes Based on Selected Category: Implement the filterQuotes function to update the displayed quotes based on the selected category.
+    // CHECKPOINT: Step 2: Implement Filtering Logic - Filter Quotes Based on Selected Category.
+    // CHECKPOINT: Implement the filterQuotes function to update the displayed quotes based on the selected category.
     window.filterQuotes = function() {
         const selectedCategory = categoryFilter.value;
         saveLastSelectedFilter(selectedCategory); // Save the selected filter to local storage
@@ -188,11 +171,9 @@ document.addEventListener('DOMContentLoaded', function() {
     // --- Quote Addition & Data Management ---
 
     // Function: addQuote
-    // CHECKPOINT: Check for the addQuote function.
-    // CHECKPOINT: Logic to add a new quote to the quotes array and update the DOM.
-    // CHECKPOINT: Update the addQuote function to also update the categories in the dropdown if a new category is introduced.
+    // CHECKPOINT: Step 3: Update Web Storage with Category Data - Update the addQuote function to also update the categories in the dropdown if a new category is introduced.
     // CHECKPOINT: Ensure that changes in categories and filters are reflected in real-time and persisted across sessions.
-    window.addQuote = async function() { // Made async because it will call postQuoteToServer
+    window.addQuote = async function() {
         const text = newQuoteText.value.trim();
         const category = newQuoteCategory.value.trim();
         const author = "User";
@@ -211,7 +192,7 @@ document.addEventListener('DOMContentLoaded', function() {
         newQuoteText.value = '';
         newQuoteCategory.value = '';
 
-        // Simulate posting to server and then syncing
+        // Simulate posting to server and then syncing (from later tasks)
         displayNotification("Quote added locally. Syncing with server...", "info");
         await postQuoteToServer(newQuote);
         await syncQuotes();
@@ -223,7 +204,8 @@ document.addEventListener('DOMContentLoaded', function() {
     // --- JSON Import/Export Functions ---
 
     // Function: Exports quotes to a JSON file.
-    // CHECKPOINT: Implement JSON Export: Provide a button that allows users to export their quotes to a JSON file. Use Blob and URL.createObjectURL.
+    // CHECKPOINT: Step 2: JSON Data Import and Export - Implement JSON Export.
+    // CHECKPOINT: Provide a button that allows users to export their quotes to a JSON file. Use Blob and URL.createObjectURL.
     window.exportQuotesToJson = function() {
         const jsonString = JSON.stringify(quotes, null, 2); // null, 2 for pretty printing JSON
         const blob = new Blob([jsonString], { type: 'application/json' });
@@ -240,7 +222,8 @@ document.addEventListener('DOMContentLoaded', function() {
     };
 
     // Function: Imports quotes from a JSON file.
-    // CHECKPOINT: Implement JSON Import: Provide a file input to allow users to upload a JSON file containing quotes. Read the file and update.
+    // CHECKPOINT: Step 2: JSON Data Import and Export - Implement JSON Import.
+    // CHECKPOINT: Provide a file input to allow users to upload a JSON file containing quotes. Read the file and update.
     window.importFromJsonFile = async function(event) {
         const fileReader = new FileReader();
         fileReader.onload = async function(event) {
@@ -276,67 +259,36 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     };
 
-    // --- Data Syncing Logic (Step 2 & 3) ---
-    // CHECKPOINT: Implement Data Syncing Logic: Add functionality to periodically check for new quotes from the server and update the local storage accordingly.
-    // CHECKPOINT: Implement a simple conflict resolution strategy where the server’s data takes precedence in case of discrepancies.
-    // CHECKPOINT: Add a UI element or notification system to inform users when data has been updated or if conflicts were resolved.
-    // Note: Manual conflict resolution is outside the scope of this "simple simulation" but can be added.
+    // --- Data Syncing Logic (from later tasks, kept for completeness) ---
     async function syncQuotes() {
         console.log("Initiating sync with server...");
         displayNotification("Syncing data...", "info");
-
         try {
-            const serverQuotes = await fetchQuotesFromServer(); // Get server's version
-
+            const serverQuotes = await fetchQuotesFromServer();
             const localQuotesMap = new Map(quotes.map(q => [q.id, q]));
             const serverQuotesMap = new Map(serverQuotes.map(q => [q.id, q]));
-
             let changesDetected = false;
-            let notifications = []; // Collect specific changes for console log
-
-            // Phase 1: Incorporate server changes into local data (Server precedence)
             serverQuotesMap.forEach((serverQuote, id) => {
                 if (localQuotesMap.has(id)) {
-                    // Quote exists locally, check for discrepancies
                     const localQuote = localQuotesMap.get(id);
-                    // Deep compare content to detect actual change
                     if (JSON.stringify(localQuote) !== JSON.stringify(serverQuote)) {
-                        // Content differs, server's version wins (conflict resolution)
-                        Object.assign(localQuote, serverQuote); // Update in place (modifies 'quotes' array by reference)
-                        notifications.push(`Updated quote: "${serverQuote.text.substring(0, Math.min(serverQuote.text.length, 30))}..." from server.`);
+                        Object.assign(localQuote, serverQuote);
                         changesDetected = true;
                     }
                 } else {
-                    // Quote exists on server but not locally, add it
-                    quotes.push({ ...serverQuote }); // Add a copy to avoid direct reference issues
-                    notifications.push(`Added new quote: "${serverQuote.text.substring(0, Math.min(serverQuote.text.length, 30))}..." from server.`);
+                    quotes.push({ ...serverQuote });
                     changesDetected = true;
                 }
             });
-
-            // Phase 2: Remove local quotes that are not on the server (server precedence for deletions)
-            // Filter the local 'quotes' array to only keep items that are also present on the server.
-            // This implicitly handles deletions from the server taking precedence.
-            let quotesBeforeFilterCount = quotes.length;
             quotes = quotes.filter(q => serverQuotesMap.has(q.id));
-            if (quotes.length < quotesBeforeFilterCount) {
-                 // Simple check if any quotes were removed
-                const removedCount = quotesBeforeFilterCount - quotes.length;
-                notifications.push(`Removed ${removedCount} local quotes (deleted on server).`);
-                changesDetected = true;
-            }
-
-
             if (changesDetected) {
-                saveQuotes(); // Save updated local state to localStorage
-                populateCategories(); // Re-populate categories if quotes changed
-                filterQuotes(); // Refresh displayed quote based on potentially new data
-                displayNotification("Data synced successfully! Check console for details.", "success");
-                notifications.forEach(msg => console.log(`Sync Log: ${msg}`));
+                saveQuotes();
+                populateCategories();
+                filterQuotes();
+                displayNotification("Data synced successfully!", "success");
             } else {
                 displayNotification("Local data is up-to-date with server. No changes found.", "info");
             }
-
         } catch (error) {
             console.error("Error during sync:", error);
             displayNotification("Error during sync with server. Check console.", "error");
@@ -344,14 +296,13 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // --- Notification System ---
-    // CHECKPOINT: Add a UI element or notification system to inform users when data has been updated or if conflicts were resolved.
-    function displayNotification(message, type = "info") { // type: info, success, error
-        if (notificationDisplay) { // Ensure the element exists
+    function displayNotification(message, type = "info") {
+        if (notificationDisplay) {
             notificationDisplay.textContent = message;
-            notificationDisplay.className = `notification ${type}`; // Add base class and type class
-            notificationDisplay.style.display = 'block'; // Make it visible
+            notificationDisplay.className = `notification ${type}`;
+            notificationDisplay.style.display = 'block';
             setTimeout(() => {
-                notificationDisplay.style.display = 'none'; // Hide after 7 seconds
+                notificationDisplay.style.display = 'none';
             }, 7000);
         }
     }
@@ -366,18 +317,17 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
     // --- Event Listeners and Initial Load ---
-    // CHECKPOINT: Check for event listener on the “Show New Quote” button.
     newQuoteBtn.addEventListener('click', filterQuotes);
     addQuoteBtn.addEventListener('click', addQuote);
     categoryFilter.addEventListener('change', filterQuotes);
     exportQuotesBtn.addEventListener('click', exportQuotesToJson);
 
-    // CHECKPOINT: Implement periodic data fetching to simulate receiving updates from a server.
-    setInterval(syncQuotes, 15000); // Sync every 15 seconds.
+    // Periodic data fetching simulation (from later task)
+    setInterval(syncQuotes, 15000);
 
     // Initial setup when the page loads:
-    populateCategories(); // Populate categories based on initial local/loaded quotes
-    filterQuotes();       // Display a quote based on current filter (restored or default)
-    displayLastViewedQuote(); // Show last viewed quote from session storage
-    syncQuotes();         // Perform an initial sync on page load
+    populateCategories();
+    filterQuotes();
+    displayLastViewedQuote();
+    syncQuotes(); // Initial sync on page load
 });
