@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dynamic Quote Generator</title>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            background-color: #f4f7f6;
+            color: #333;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        h1 {
+            color: #2c3e50;
+            margin-bottom: 30px;
+            font-size: clamp(2em, 5vw, 3.5em); /* Responsive font size */
+            text-align: center;
+        }
+
+        .container {
+            background-color: #ffffff;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+            max-width: 700px;
+            width: 100%;
+            margin-bottom: 30px;
+            box-sizing: border-box;
+            text-align: center;
+        }
+
+        #quoteDisplay {
+            min-height: 100px; /* Ensure space for quote */
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            font-size: clamp(1.2em, 3vw, 1.8em); /* Responsive font size */
+            font-style: italic;
+            color: #555;
+            margin-bottom: 20px;
+            padding: 15px;
+            border: 1px dashed #ccc;
+            border-radius: 8px;
+            transition: all 0.3s ease-in-out;
+            text-align: center;
+        }
+
+        #quoteDisplay.no-quote {
+            color: #999;
+            font-style: normal;
+        }
+
+        #quoteAuthor {
+            font-size: 0.8em;
+            margin-top: 10px;
+            color: #777;
+        }
+
+        button {
+            background-color: #3498db;
+            color: white;
+            padding: 12px 25px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1em;
+            margin: 5px;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        button:hover {
+            background-color: #2980b9;
+            transform: translateY(-2px);
+        }
+
+        #addQuoteForm {
+            margin-top: 40px;
+            border-top: 1px solid #eee;
+            padding-top: 30px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        #addQuoteForm input[type="text"],
+        #categoryFilter {
+            width: calc(100% - 40px); /* Adjust for padding */
+            padding: 12px 15px;
+            margin-bottom: 15px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 1em;
+            box-sizing: border-box;
+            transition: border-color 0.3s ease;
+        }
+
+        #addQuoteForm input[type="text"]:focus,
+        #categoryFilter:focus {
+            border-color: #3498db;
+            outline: none;
+        }
+
+        #addQuoteForm button {
+            background-color: #28a745;
+            margin-top: 10px;
+        }
+
+        #addQuoteForm button:hover {
+            background-color: #218838;
+        }
+
+        .filter-section {
+            margin-top: 20px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .filter-section label {
+            font-size: 1.1em;
+            margin-right: 10px;
+            color: #555;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 480px) {
+            body {
+                padding: 10px;
+            }
+            .container {
+                padding: 20px;
+            }
+            #addQuoteForm input[type="text"],
+            #categoryFilter {
+                width: calc(100% - 30px); /* Smaller padding adjustment */
+                padding: 10px;
+                font-size: 0.9em;
+            }
+            button {
+                padding: 10px 20px;
+                font-size: 0.9em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <h1>Dynamic Quote Generator</h1>
+
+    <div class="container">
+        <div id="quoteDisplay" class="no-quote">
+            Click "Show New Quote" to see a quote.
+        </div>
+        <div id="quoteAuthor"></div>
+        <button id="newQuoteBtn">Show New Quote</button>
+
+        <div class="filter-section">
+            <label for="categoryFilter">Filter by Category:</label>
+            <select id="categoryFilter">
+                <option value="all">All Categories</option>
+            </select>
+        </div>
+    </div>
+
+    <div class="container" id="addQuoteForm">
+        <h2>Add Your Own Quote</h2>
+        <input id="newQuoteText" type="text" placeholder="Enter a new quote" />
+        <input id="newQuoteCategory" type="text" placeholder="Enter quote category" />
+        <button id="addQuoteBtn">Add Quote</button>
+    </div>
+
+    <!-- Link your JavaScript file -->
+    <script src="script.js"></script>
+</body>
+</html>
