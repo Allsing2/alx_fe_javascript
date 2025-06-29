@@ -256,61 +256,52 @@
     </style>
 </head>
 <body>
-  <h1>Dynamic Quote Generator</h1>
+    <h1>Dynamic Quote Generator</h1>
 
-  <!-- Main Quote Display Section -->
-  <div class="container">
-    <div id="quoteDisplay" class="no-quote">
-      Click "Show New Quote" to see a quote.
+    <!-- Main Quote Display Section -->
+    <div class="container">
+        <div id="quoteDisplay" class="no-quote">
+            Click "Show New Quote" to see a quote.
+        </div>
+        <div id="quoteAuthor"></div>
+        <button id="newQuoteBtn">Show New Quote</button>
+
+        <!-- CHECKPOINT: Step 1 - Add Category Filter: Introduce a dropdown menu -->
+        <div class="filter-section">
+            <label for="categoryFilter">Filter by Category:</label>
+            <select id="categoryFilter" onchange="filterQuotes()">
+                <option value="all">All Categories</option>
+                <!-- Dynamically populated categories -->
+            </select>
+        </div>
+
+        <!-- Session Storage Display for Last Viewed Quote -->
+        <div id="lastViewedQuoteDisplay"></div>
     </div>
-    <div id="quoteAuthor"></div>
-    <button id="newQuoteBtn">Show New Quote</button>
 
-    <!-- Category Filter Dropdown -->
-    <div class="filter-section">
-      <label for="categoryFilter">Filter by Category:</label>
-      <select id="categoryFilter" onchange="filterQuotes()">
-        <option value="all">All Categories</option>
-      </select>
+    <!-- Dynamic Quote Addition Form -->
+    <div class="container" id="addQuoteForm">
+        <h2>Add Your Own Quote</h2>
+        <input id="newQuoteText" type="text" placeholder="Enter a new quote" />
+        <input id="newQuoteCategory" type="text" placeholder="Enter quote category" />
+        <button id="addQuoteBtn">Add Quote</button>
     </div>
 
-    <!-- Last Viewed Quote Display -->
-    <div id="lastViewedQuoteDisplay"></div>
-  </div>
+    <!-- JSON Import/Export Controls -->
+    <div class="container storage-buttons-container">
+        <h2>Manage Quotes Data</h2>
+        <button id="exportQuotesBtn">Export Quotes (JSON)</button>
+        <!-- The file input is hidden and triggered by a styled label (button look-alike) -->
+        <label for="importFile" class="button">
+            <input type="file" id="importFile" accept=".json" onchange="importFromJsonFile(event)" style="display: none;" />
+            Import Quotes (JSON)
+        </label>
+    </div>
 
-  <!-- Add Quote Form -->
-  <div class="container" id="addQuoteForm">
-    <h2>Add Your Own Quote</h2>
-    <input id="newQuoteText" type="text" placeholder="Enter a new quote" />
-    <input id="newQuoteCategory" type="text" placeholder="Enter quote category" />
-    <button id="addQuoteBtn">Add Quote</button>
-  </div>
+    <!-- Notification Display Element -->
+    <div id="notificationDisplay" class="notification" style="display: none;"></div>
 
-  <!-- Storage Buttons -->
-  <div class="container storage-buttons-container">
-    <h2>Manage Quotes Data</h2>
-    <button id="exportQuotesBtn">Export Quotes (JSON)</button>
-    <label for="importFile" class="button">
-      <input type="file" id="importFile" accept=".json" onchange="importFromJsonFile(event)" style="display: none;" />
-      Import Quotes (JSON)
-    </label>
-  </div>
-
-  <!-- Sync Buttons -->
-  <div class="container">
-    <h2>Server Sync Controls</h2>
-    <button id="manualSyncBtn">Sync Now</button>
-    <label for="syncIntervalSelect">Auto Sync Interval:</label>
-    <select id="syncIntervalSelect">
-      <option value="30000">Every 30 seconds</option>
-      <option value="60000">Every 1 minute</option>
-      <option value="120000">Every 2 minutes</option>
-    </select>
-  </div>
-
-  <!-- Notification Display -->
-  <div id="notificationDisplay" class="notification" style="display: none;"></div>
-
-  <script src="script.js" type="module"></script>
+    <!-- Link your JavaScript file (script.js) -->
+    <script src="script.js"></script>
 </body>
 </html>
