@@ -188,6 +188,8 @@ document.addEventListener('DOMContentLoaded', function() {
     // --- Quote Addition & Data Management ---
 
     // Function: addQuote
+    // CHECKPOINT: Check for the addQuote function.
+    // CHECKPOINT: Logic to add a new quote to the quotes array and update the DOM.
     // CHECKPOINT: Update the addQuote function to also update the categories in the dropdown if a new category is introduced.
     // CHECKPOINT: Ensure that changes in categories and filters are reflected in real-time and persisted across sessions.
     window.addQuote = async function() { // Made async because it will call postQuoteToServer
@@ -364,6 +366,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
     // --- Event Listeners and Initial Load ---
+    // CHECKPOINT: Check for event listener on the “Show New Quote” button.
     newQuoteBtn.addEventListener('click', filterQuotes);
     addQuoteBtn.addEventListener('click', addQuote);
     categoryFilter.addEventListener('change', filterQuotes);
