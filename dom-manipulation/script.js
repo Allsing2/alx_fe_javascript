@@ -5,6 +5,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // 1. Initial Data & Local Storage Integration
+    // CHECKPOINT: Modify the JavaScript code to save the quotes array to local storage every time a new quote is added.
     // CHECKPOINT: Ensure that the application loads existing quotes from local storage when initialized.
     let quotes = JSON.parse(localStorage.getItem('quotes')) || [
         { text: "The only way to do great work is to love what you do.", author: "Steve Jobs", category: "Inspiration" },
@@ -19,7 +20,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
     // --- Simulate Server Interaction (from later tasks, kept for completeness) ---
-    // Initialize mock server with a deep copy of the initial local data for consistency.
     let mockServerQuotes = JSON.parse(JSON.stringify(quotes));
 
     async function fetchQuotesFromServer() {
@@ -48,7 +48,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const exportQuotesBtn = document.getElementById('exportQuotesBtn');
     const importFile = document.getElementById('importFile');
     const lastViewedQuoteDisplay = document.getElementById('lastViewedQuoteDisplay');
-    const notificationDisplay = document.getElementById('notificationDisplay');
+    const notificationDisplay = document.getElementById('notificationDisplay'); // Notification UI element
 
 
     // Set to keep track of unique categories for the filter dropdown.
@@ -57,7 +57,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // --- Web Storage Helper Functions ---
 
     // Function: Saves the current 'quotes' array to Local Storage.
-    // CHECKPOINT: Modify the JavaScript code to save the quotes array to local storage every time a new quote is added.
+    // CHECKPOINT: Modify the JavaScript code to save the quotes array to local storage.
     function saveQuotes() {
         localStorage.setItem('quotes', JSON.stringify(quotes));
     }
@@ -81,19 +81,17 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    // Function: Saves the currently selected filter category to Local Storage.
-    // CHECKPOINT: Remember the Last Selected Filter: Use local storage to save the last selected category filter.
+    // Function: Saves the currently selected filter category to Local Storage (from later task).
     function saveLastSelectedFilter(category) {
         localStorage.setItem('lastSelectedCategoryFilter', category);
     }
 
-    // Function: Loads the last selected filter category from Local Storage.
-    // CHECKPOINT: Remember the Last Selected Filter: Restore it when the user revisits the page.
+    // Function: Loads the last selected filter category from Local Storage (from later task).
     function loadLastSelectedFilter() {
-        return localStorage.getItem('lastSelectedCategoryFilter') || 'all'; // Default to 'all'
+        return localStorage.getItem('lastSelectedCategoryFilter') || 'all';
     }
 
-    // --- Core Display & Filtering Functions ---
+    // --- Core Display & Filtering Functions (from later tasks) ---
 
     // Helper function: Displays a single quote.
     function displayQuote(quote) {
@@ -106,20 +104,14 @@ document.addEventListener('DOMContentLoaded', function() {
             quoteDisplay.textContent = "No quotes available for this category.";
             quoteAuthor.textContent = "";
             quoteDisplay.classList.add('no-quote');
-            saveLastViewedQuote(null); // Clear last viewed if no quote is available
+            saveLastViewedQuote(null);
         }
     }
 
-    // Function: populateCategories
-    // CHECKPOINT: Step 2: Implement Filtering Logic - Populate Categories Dynamically.
-    // CHECKPOINT: Use the existing quotes array to extract unique categories and populate the dropdown menu.
-    // CHECKPOINT: Name the function behind this implementation populateCategories.
+    // Populates the category filter dropdown.
     window.populateCategories = function() {
-        // Clear all existing options first, but keep "All Categories".
         categoryFilter.innerHTML = '<option value="all">All Categories</option>';
-        uniqueCategories.clear(); // Clear the Set to re-populate from scratch
-
-        // Iterate over each quote to collect unique categories.
+        uniqueCategories.clear();
         quotes.forEach(quote => {
             if (quote.category && typeof quote.category === 'string' && quote.category.trim() !== '') {
                 const trimmedCategory = quote.category.trim();
@@ -132,25 +124,19 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
             }
         });
-
-        // Restore the last selected filter after populating categories
         const lastFilter = loadLastSelectedFilter();
-        // Ensure the restored filter is actually an available category or 'all'
         if (Array.from(uniqueCategories).includes(lastFilter) || lastFilter === 'all') {
             categoryFilter.value = lastFilter;
         } else {
-            // If the last filter category no longer exists (e.g., deleted), reset to 'all'
             categoryFilter.value = 'all';
-            saveLastSelectedFilter('all'); // Also update local storage for this change
+            saveLastSelectedFilter('all');
         }
     };
 
-    // Function: filterQuotes
-    // CHECKPOINT: Step 2: Implement Filtering Logic - Filter Quotes Based on Selected Category.
-    // CHECKPOINT: Implement the filterQuotes function to update the displayed quotes based on the selected category.
+    // Filters and displays quotes.
     window.filterQuotes = function() {
         const selectedCategory = categoryFilter.value;
-        saveLastSelectedFilter(selectedCategory); // Save the selected filter to local storage
+        saveLastSelectedFilter(selectedCategory);
 
         let filteredQuotes = quotes;
         if (selectedCategory !== 'all') {
@@ -161,18 +147,17 @@ document.addEventListener('DOMContentLoaded', function() {
             const randomIndex = Math.floor(Math.random() * filteredQuotes.length);
             displayQuote(filteredQuotes[randomIndex]);
         } else {
-            displayQuote(null); // No quotes found for this category
+            displayQuote(null);
         }
     };
 
-    // Alias for showRandomQuote to use the new filterQuotes logic
     window.showRandomQuote = window.filterQuotes;
 
     // --- Quote Addition & Data Management ---
 
-    // Function: addQuote
-    // CHECKPOINT: Step 3: Update Web Storage with Category Data - Update the addQuote function to also update the categories in the dropdown if a new category is introduced.
-    // CHECKPOINT: Ensure that changes in categories and filters are reflected in real-time and persisted across sessions.
+    // CHECKPOINT: Check for the addQuote function.
+    // CHECKPOINT: Logic to add a new quote to the quotes array and update the DOM.
+    // CHECKPOINT: Modify the JavaScript code to save the quotes array to local storage every time a new quote is added.
     window.addQuote = async function() {
         const text = newQuoteText.value.trim();
         const category = newQuoteCategory.value.trim();
@@ -187,7 +172,7 @@ document.addEventListener('DOMContentLoaded', function() {
         quotes.push(newQuote); // Add new quote to the local array
         saveQuotes(); // This line saves the updated 'quotes' array to Local Storage
 
-        populateCategories(); // Update categories dropdown (re-scans and adds new if present)
+        populateCategories(); // Re-populate categories (will include new category if present)
 
         newQuoteText.value = '';
         newQuoteCategory.value = '';
@@ -204,8 +189,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // --- JSON Import/Export Functions ---
 
     // Function: Exports quotes to a JSON file.
-    // CHECKPOINT: Step 2: JSON Data Import and Export - Implement JSON Export.
-    // CHECKPOINT: Provide a button that allows users to export their quotes to a JSON file. Use Blob and URL.createObjectURL.
+    // CHECKPOINT: Implement JSON Export: Provide a button that allows users to export their quotes to a JSON file.
     window.exportQuotesToJson = function() {
         const jsonString = JSON.stringify(quotes, null, 2); // null, 2 for pretty printing JSON
         const blob = new Blob([jsonString], { type: 'application/json' });
@@ -213,17 +197,16 @@ document.addEventListener('DOMContentLoaded', function() {
         const a = document.createElement('a');
         a.href = url;
         a.download = 'quotes.json'; // Set the download filename
-        document.body.appendChild(a); // Append to body to ensure it's in DOM for click to work
+        document.body.appendChild(a);
         a.click();
-        document.body.removeChild(a); // Clean up the temporary anchor
-        URL.revokeObjectURL(url); // Clean up the object URL
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
         console.log("Quotes exported successfully!");
         displayNotification("Quotes exported successfully!", "info");
     };
 
     // Function: Imports quotes from a JSON file.
-    // CHECKPOINT: Step 2: JSON Data Import and Export - Implement JSON Import.
-    // CHECKPOINT: Provide a file input to allow users to upload a JSON file containing quotes. Read the file and update.
+    // CHECKPOINT: Implement JSON Import: Provide a file input to allow users to upload a JSON file containing quotes.
     window.importFromJsonFile = async function(event) {
         const fileReader = new FileReader();
         fileReader.onload = async function(event) {
@@ -317,8 +300,9 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
     // --- Event Listeners and Initial Load ---
-    newQuoteBtn.addEventListener('click', filterQuotes);
-    addQuoteBtn.addEventListener('click', addQuote);
+    // CHECKPOINT: Check for event listener on the “Show New Quote” button.
+    newQuoteBtn.addEventListener('click', filterQuotes); // This listener calls filterQuotes which updates the quote display.
+    addQuoteBtn.addEventListener('click', addQuote); // Event listener for the "Add Quote" button.
     categoryFilter.addEventListener('change', filterQuotes);
     exportQuotesBtn.addEventListener('click', exportQuotesToJson);
 
